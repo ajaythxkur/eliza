@@ -21,6 +21,7 @@ import {
 import { defaultCharacter } from "./defaultCharacter.ts";
 
 import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
+import { movementPlugin } from "@elizaos/plugin-movement";
 
 import fs from "fs";
 import net from "net";
@@ -605,7 +606,8 @@ export async function createAgent(
         character,
         // character.plugins are handled when clients are added
         plugins: [
-            bootstrapPlugin,
+            // bootstrapPlugin,
+            movementPlugin
         ]
             .flat()
             .filter(Boolean),

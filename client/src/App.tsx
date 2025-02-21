@@ -9,7 +9,9 @@ import Chat from "./routes/chat";
 import Overview from "./routes/overview";
 import Home from "./routes/home";
 import useVersion from "./hooks/use-version";
-
+import { WalletProvider } from "./context/WalletProvider";
+import { Toaster as SonnerToaster } from "sonner";
+import { Buffer } from "buffer";
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
@@ -17,6 +19,7 @@ const queryClient = new QueryClient({
         },
     },
 });
+window.Buffer = Buffer;
 
 function App() {
     useVersion();
@@ -30,6 +33,7 @@ function App() {
             >
                 <BrowserRouter>
                     <TooltipProvider delayDuration={0}>
+                        <WalletProvider>
                         <SidebarProvider>
                             <AppSidebar />
                             <SidebarInset>
@@ -48,7 +52,9 @@ function App() {
                                 </div>
                             </SidebarInset>
                         </SidebarProvider>
+                        </WalletProvider>
                         <Toaster />
+                        <SonnerToaster />
                     </TooltipProvider>
                 </BrowserRouter>
             </div>

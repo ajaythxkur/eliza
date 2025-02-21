@@ -23,7 +23,7 @@ import type { IAttachment } from "@/types";
 import { AudioRecorder } from "./audio-recorder";
 import { Badge } from "./ui/badge";
 import { useAutoScroll } from "./ui/chat/hooks/useAutoScroll";
-
+import ConfirmTxnButton from "./confirm-txn-button";
 type ExtraContentFields = {
     user: string;
     createdAt: number;
@@ -35,6 +35,7 @@ type ContentWithUser = Content & ExtraContentFields;
 type AnimatedDivProps = AnimatedProps<{ style: React.CSSProperties }> & {
     children?: React.ReactNode;
 };
+
 
 export default function Page({ agentId }: { agentId: UUID }) {
     const { toast } = useToast();
@@ -156,13 +157,12 @@ export default function Page({ agentId }: { agentId: UUID }) {
         }
     };
 
-    const messages =
+    let messages =
         queryClient.getQueryData<ContentWithUser[]>(["messages", agentId]) ||
         [];
-
     const transitions = useTransition(messages, {
         keys: (message) =>
-            `${message.createdAt}-${message.user}-${message.text}`,
+            `${message.createdAt}-${message.user}-${message.action}`,
         from: { opacity: 0, transform: "translateY(50px)" },
         enter: { opacity: 1, transform: "translateY(0px)" },
         leave: { opacity: 0, transform: "translateY(10px)" },
@@ -239,6 +239,10 @@ export default function Page({ agentId }: { agentId: UUID }) {
                                             {message?.text &&
                                             !message?.isLoading ? (
                                                 <div className="flex items-center gap-1">
+                                                    {message.action === "TRANSACTION" &&  
+                                                    <ConfirmTxnButton
+                                                        text={message?.text}
+                                                    />}
                                                     <CopyButton
                                                         text={message?.text}
                                                     />
