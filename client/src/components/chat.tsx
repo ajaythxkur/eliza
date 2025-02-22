@@ -169,7 +169,8 @@ export default function Page({ agentId }: { agentId: UUID }) {
     });
 
     const CustomAnimatedDiv = animated.div as React.FC<AnimatedDivProps>;
-
+    console.log(messages);
+    
     return (
         <div className="flex flex-col w-full h-[calc(100dvh)] p-4">
             <div className="flex-1 overflow-y-auto">
@@ -204,13 +205,21 @@ export default function Page({ agentId }: { agentId: UUID }) {
                                         <ChatBubbleMessage
                                             isLoading={message?.isLoading}
                                         >
-                                            {message?.user !== "user" ? (
+                                            {
+                                                message.action !== "TRANSACTION"
+                                                ? <>
+                                                {message?.user !== "user" ? (
                                                 <AIWriter>
                                                     {message?.text}
                                                 </AIWriter>
                                             ) : (
                                                 message?.text
                                             )}
+                                                </>
+                                                :
+                                                "Click on the checkbox below to confirm the transaction"
+                                            }
+                                            
                                             {/* Attachments */}
                                             <div>
                                                 {message?.attachments?.map(
@@ -239,10 +248,10 @@ export default function Page({ agentId }: { agentId: UUID }) {
                                             {message?.text &&
                                             !message?.isLoading ? (
                                                 <div className="flex items-center gap-1">
-                                                    {message.action === "TRANSACTION" &&  
+                                                    {/* {message.action == "TRANSACTION" &&   */}
                                                     <ConfirmTxnButton
                                                         text={message?.text}
-                                                    />}
+                                                    />
                                                     <CopyButton
                                                         text={message?.text}
                                                     />

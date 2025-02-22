@@ -22,6 +22,7 @@
         "@aptos-labs/ts-sdk": "^1.35.0",
         "@aptos-labs/wallet-standard": "^0.3.0",
         "@elizaos/core": "workspace:*",
+        "pinata-web3": "^0.5.4",
         "tsup": "8.3.5"
     },
     "devDependencies": {

@@ -143,7 +143,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
                     label: "View on Explorer",
                     onClick: () => {
                         window.open(
-                            `https://explorer.movementlabs.xyz/txn/${signedTx.args.hash}?network=testnet`,
+                            `https://explorer.movementlabs.xyz/txn/${signedTx.args.hash}?network=bardock+testnet`,
                             "_blank"
                         );
                     },

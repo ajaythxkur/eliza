@@ -1,0 +1,17 @@
+[package]
+name = "move-ai"
+version = "1.0.0"
+authors = []
+
+[addresses]
+my_addrx="_"
+
+[dev-addresses]
+my_addrx="0xcafe"
+
+[dependencies]
+AptosFramework = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "movement", subdir = "aptos-move/framework/aptos-framework"}
+AptosTokenObjects = {git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "movement", subdir = "aptos-move/framework/aptos-token-objects"}
+AptosToken = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "movement", subdir = "aptos-move/framework/aptos-token" }
+
+[dev-dependencies]

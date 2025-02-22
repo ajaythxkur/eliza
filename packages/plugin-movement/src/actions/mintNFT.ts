@@ -12,7 +12,23 @@ import {
     Content,
     generateImage,
 } from "@elizaos/core";
-const MOVE_DECIMALS = 8;
+import { getFileUrl, uploadFileToIpfs } from "../misc/pinata";
+
+export async function uploadBase64ToIpfs(base64String: string, fileName: string) {
+    // Convert Base64 to Blob
+    const byteCharacters = atob(base64String.split(',')[1]);
+    const byteNumbers = new Uint8Array(byteCharacters.length).map((_, i) => byteCharacters.charCodeAt(i));
+    const blob = new Blob([byteNumbers], { type: "image/jpeg" }); // Change type accordingly
+
+    // Create File object
+    const file = new File([blob], fileName, { type: "image/jpeg" });
+
+    // Upload to IPFS using Pinata
+    const pinResponse = await uploadFileToIpfs(file);
+    const url =await getFileUrl(pinResponse.IpfsHash);
+    return url;
+}
+const NFT_MODULE = `d3bccb5a984ac81e49868fc82056c523ccfbad7f75c80ce6a2a832b4b3b386ec::NFT`;
 export interface PromptContent extends Content {
     recipient: string;
     amount: string | number;
@@ -23,6 +39,7 @@ function isPromptContent(content: any): content is PromptContent {
         typeof content.prompt === "string"
     );
 }
+
 const promptTemplate = `You are processing a prompt for image generate request request. Extract the prompt for image from the message.
 
 Example request 1: "i want to mint and nft of a cat"
@@ -122,11 +139,19 @@ export const mintNFTAction: Action = {
             height: 250,
             width: 250,
         }, runtime);
+        const imageUrl = await uploadBase64ToIpfs(image.data[0], `image-${Date.now()}.jpg`);
+        const responseText = JSON.stringify({
+            function: `${NFT_MODULE}::mint`,
+            typeArguments: [],
+            functionArguments: [
+                imageUrl,
+            ],
+        });
 
         if (callback) {
             callback({
-                text: "",
-                content: { text: "Sure, processing the transfer..." },
+                text: responseText,
+                content: { text: responseText },
                 inReplyTo: message.id,
                 attachments: [
                     {
@@ -137,7 +162,8 @@ export const mintNFTAction: Action = {
                         description: "NFT Image",
                         text: "NFT Image",
                     }
-                ]
+                ],
+                action: "TRANSACTION"
             });
         }
         return true;
